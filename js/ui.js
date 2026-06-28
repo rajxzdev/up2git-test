@@ -34,7 +34,7 @@ class UIManager {
   }
 
   /**
-   * Show Toast Notification (Stable HW accelerated top center position)
+   * Show Toast Notification
    */
   showToast(message, type = 'info') {
     const container = document.getElementById('toast-container');
@@ -153,7 +153,6 @@ class UIManager {
 
     let history = JSON.parse(localStorage.getItem('up2git_upload_history') || '[]');
 
-    // Seed with nice starter records if empty so the chart looks vibrant right away
     if (history.length === 0) {
       history = [
         { date: '26 Jun', repo: 'starter-kit', count: 5 },
@@ -351,14 +350,16 @@ class UIManager {
   }
 
   /**
-   * Add log entry to upload console
+   * Add log entry to upload console with synchronized session timestamp
    */
-  addUploadLog(text, type = 'info') {
+  addUploadLog(text, type = 'info', syncTime = null) {
     const logEl = document.getElementById('upload-log');
     if (!logEl) return;
 
     const div = document.createElement('div');
     div.className = `log-item log-${type}`;
+
+    const timeStamp = syncTime || new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
     let icon = '';
     if (type === 'success') {
@@ -369,7 +370,7 @@ class UIManager {
       icon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>`;
     }
 
-    div.innerHTML = `${icon}<span style="min-width: 0; flex: 1;">[${new Date().toLocaleTimeString()}] ${text}</span>`;
+    div.innerHTML = `${icon}<span style="min-width: 0; flex: 1;">[${timeStamp}] ${text}</span>`;
 
     logEl.appendChild(div);
     logEl.scrollTop = logEl.scrollHeight;
