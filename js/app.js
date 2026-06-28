@@ -1,6 +1,6 @@
 /**
  * Main Application Controller
- * Coordinates events between Auth, Repositories, ZIP Extraction, and UI rendering.
+ * Coordinates events between Auth, Repositories, ZIP Extraction, UI rendering, and Theme Switcher.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -12,9 +12,45 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentZipFile = null;
 
   /* ==========================================================================
+     Theme Switcher (Light / Dark Mode)
+     ========================================================================== */
+  function initTheme() {
+    const savedTheme = localStorage.getItem('up2git_theme');
+    const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const initialTheme = savedTheme || (systemDark ? 'dark' : 'light');
+    
+    applyTheme(initialTheme);
+  }
+
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('up2git_theme', theme);
+
+    const sunIcon = document.getElementById('theme-icon-sun');
+    const moonIcon = document.getElementById('theme-icon-moon');
+
+    if (theme === 'dark') {
+      sunIcon?.classList.add('hidden');
+      moonIcon?.classList.remove('hidden');
+    } else {
+      sunIcon?.classList.remove('hidden');
+      moonIcon?.classList.add('hidden');
+    }
+  }
+
+  document.getElementById('btn-theme-toggle')?.addEventListener('click', () => {
+    const current = document.documentElement.getAttribute('data-theme') || 'light';
+    const next = current === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    ui.showToast(`Mode UI beralih ke ${next.toUpperCase()}`, 'info');
+  });
+
+  /* ==========================================================================
      Initialization & Auth State Check
      ========================================================================== */
   async function initApp() {
+    initTheme();
+
     const token = gh.getToken();
     const cachedUser = gh.getCachedUser();
 
@@ -46,7 +82,6 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       const target = e.currentTarget.dataset.target;
       
-      // Check auth requirement for protected views
       if (['repos', 'upload', 'new-repo'].includes(target) && !gh.getToken()) {
         ui.showToast("Silakan Connect ke GitHub terlebih dahulu.", 'error');
         ui.switchView('home');
@@ -61,7 +96,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Quick action buttons in Home View
   document.getElementById('btn-go-upload')?.addEventListener('click', () => {
     ui.switchView('upload');
   });
@@ -128,7 +162,6 @@ document.addEventListener('DOMContentLoaded', () => {
       ui.renderRepositories(repos);
       ui.populateUploadReposDropdown(repos);
       
-      // Update quick stats count
       const statEl = document.getElementById('stat-repos-count');
       if (statEl) statEl.textContent = repos.length;
     } catch (err) {
@@ -148,7 +181,6 @@ document.addEventListener('DOMContentLoaded', () => {
     ui.renderRepositories(cachedRepos, query);
   });
 
-  // Create New Repository Form
   const formNewRepo = document.getElementById('form-new-repo');
   formNewRepo?.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -169,7 +201,6 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('new-repo-name').value = '';
       document.getElementById('new-repo-desc').value = '';
 
-      // Refresh repos list and switch to upload view with this repo selected
       await loadUserRepositories();
       ui.selectRepoForUpload(newRepo.name);
     } catch (err) {
@@ -235,7 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
      ========================================================================== */
   document.getElementById('btn-start-upload')?.addEventListener('click', () => {
     const targetRepo = document.getElementById('upload-target-repo')?.value;
-    const commitMsg = document.getElementById('upload-commit-msg')?.value.trim() || "Upload via Web ZIP Uploader";
+    const commitMsg = document.getElementById('upload-commit-msg')?.value.trim() || "Upload via up2git";
 
     if (!targetRepo) {
       ui.showToast("Silakan pilih repository tujuan terlebih dahulu.", 'error');
@@ -257,11 +288,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalSizeStr = zip.formatBytes(zip.getTotalSize());
 
     const summaryHtml = `
-      <div style="background: rgba(0,0,0,0.3); padding: 16px; border-radius: 12px; margin-top: 8px;">
+      <div style="background: rgba(0,0,0,0.06); padding: 16px; border-radius: 12px; margin-top: 8px;">
         <p><strong>Repository:</strong> ${targetRepo}</p>
         <p><strong>Total File:</strong> ${totalFiles} file (${totalSizeStr})</p>
         <p><strong>Pesan Commit:</strong> "${commitMsg}"</p>
-        <p style="margin-top: 10px; font-size: 0.82rem; color: #FFB74D;">Struktur folder di dalam ZIP akan tetap terjaga secara akurat.</p>
+        <p style="margin-top: 10px; font-size: 0.82rem; color: var(--accent-orange); font-weight: 600;">Struktur folder di dalam ZIP akan tetap terjaga secara akurat.</p>
       </div>
     `;
 
@@ -280,12 +311,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let successCount = 0;
     let failCount = 0;
 
-    // Clear previous log and show progress
     document.getElementById('upload-log').innerHTML = '';
     ui.updateProgress(0, "Mulai mengupload...");
     ui.addUploadLog(`Memulai upload ${total} file ke ${owner}/${repo}...`, 'info');
 
-    // Disable upload button during process
     const btnUpload = document.getElementById('btn-start-upload');
     if (btnUpload) btnUpload.disabled = true;
 
@@ -296,13 +325,9 @@ document.addEventListener('DOMContentLoaded', () => {
       ui.updateProgress(percent, `Mengupload (${i + 1}/${total}): ${item.path}`);
 
       try {
-        // Convert to Base64
         const base64Content = await zip.getFileBase64(item.entry);
-
-        // Check if file exists to get existing SHA (for overwrite support)
         const existingSha = await gh.getFileSha(owner, repo, item.path);
 
-        // Upload via REST PUT
         await gh.uploadFile(owner, repo, item.path, base64Content, commitMessage, existingSha);
 
         successCount++;
