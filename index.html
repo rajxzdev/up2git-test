@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>GitHub ZIP File Uploader - iOS 26 Glassmorphism</title>
+  <title>up2git - GitHub ZIP File Uploader</title>
   
   <!-- iOS Web App Optimization -->
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#0b0f19">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#F2F2F7">
 
   <!-- Main CSS -->
   <link rel="stylesheet" href="css/style.css">
@@ -18,11 +18,10 @@
 </head>
 <body>
 
-  <!-- Ambient Fluid Glass Blobs Background -->
+  <!-- Clean Subtle Monochrome Ambient Blobs -->
   <div class="ambient-background">
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
-    <div class="blob blob-3"></div>
   </div>
 
   <!-- App Header -->
@@ -34,9 +33,17 @@
         </svg>
       </div>
       <div class="brand-text">
-        <h1>GitHub ZIP Uploader</h1>
-        <span>iOS 26 Edition</span>
+        <h1>up2git</h1>
+        <span>GitHub ZIP Uploader</span>
       </div>
+    </div>
+
+    <!-- Theme Toggle (Light / Dark) -->
+    <div class="header-actions">
+      <button id="btn-theme-toggle" class="btn-theme-toggle" title="Ganti Tema Light/Dark" aria-label="Toggle Theme">
+        <svg id="theme-icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+        <svg id="theme-icon-moon" class="hidden" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+      </button>
     </div>
   </header>
 
@@ -48,16 +55,16 @@
          ====================================================================== -->
     <section id="view-home" class="view active">
       
-      <!-- Authentication Input Section (Visible when not logged in) -->
+      <!-- Authentication Input Section -->
       <div id="auth-section">
         <div class="glass-card">
           <h2 class="card-title">Connect to GitHub</h2>
-          <p class="card-subtitle">Upload seluruh isi file beserta folder di dalam ZIP ke repository Anda dengan mudah langsung lewat HP.</p>
+          <p class="card-subtitle">Upload seluruh isi file beserta folder di dalam ZIP langsung dari HP Anda ke repository GitHub.</p>
           
           <div class="warning-banner">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
             <div>
-              <p><strong>Keamanan Privasi 100%:</strong> Token Anda bersifat sensitif. Web App ini hanya menyimpan token di dalam <em>SessionStorage</em> sementara di browser HP Anda (bukan localStorage) dan tidak dikirim ke server pihak ketiga mana pun.</p>
+              <p><strong>Keamanan Privasi 100%:</strong> Token Anda bersifat sensitif. up2git hanya menyimpan token di dalam <em>SessionStorage</em> sementara di browser HP Anda (bukan localStorage) dan tidak dikirim ke server pihak ketiga mana pun.</p>
             </div>
           </div>
 
@@ -65,7 +72,7 @@
             <div class="form-group">
               <label class="form-label" for="input-pat-token">Personal Access Token (PAT)</label>
               <input type="password" id="input-pat-token" class="form-input" placeholder="ghp_xxxx atau github_pat_xxxx" autocomplete="off" required>
-              <p class="mt-1" style="font-size: 0.8rem; color: var(--text-dim);">Scope minimal yang dibutuhkan: <span style="color: var(--accent-blue);">repo</span> dan <span style="color: var(--accent-blue);">read:user</span>.</p>
+              <p class="mt-1" style="font-size: 0.82rem; color: var(--text-dim);">Scope minimal yang dibutuhkan: <span style="color: var(--accent-blue); font-weight: 600;">repo</span> dan <span style="color: var(--accent-blue); font-weight: 600;">read:user</span>.</p>
             </div>
 
             <button type="submit" class="btn btn-primary">
@@ -75,9 +82,8 @@
           </form>
         </div>
 
-        <!-- Quick Tutorial Teaser -->
         <div class="glass-card text-center" style="padding: 20px;">
-          <p style="font-size: 0.9rem; color: var(--text-muted);">Belum punya Personal Access Token?</p>
+          <p style="font-size: 0.92rem; color: var(--text-muted);">Belum punya Personal Access Token?</p>
           <button class="btn btn-glass btn-sm mt-1" onclick="window.uiManager.switchView('tutorial')">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
             Lihat Panduan & Tutorial
@@ -85,11 +91,11 @@
         </div>
       </div>
 
-      <!-- User Profile Section (Visible when logged in) -->
+      <!-- User Profile Section -->
       <div id="profile-section" class="hidden">
         <div class="glass-card profile-card">
           <div class="avatar-container">
-            <img id="profile-avatar" class="profile-avatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23131b2e'/%3E%3C/svg%3E" alt="Avatar">
+            <img id="profile-avatar" class="profile-avatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%236e6e73'/%3E%3C/svg%3E" alt="Avatar">
             <div class="status-indicator" title="Connected"></div>
           </div>
           
@@ -104,7 +110,7 @@
             </div>
             <div class="stat-box">
               <div class="stat-num" style="color: var(--accent-green);">Ready</div>
-              <div class="stat-label">Extractor</div>
+              <div class="stat-label">up2git Engine</div>
             </div>
           </div>
 
@@ -158,7 +164,7 @@
     <section id="view-upload" class="view">
       <div class="glass-card">
         <h2 class="card-title">Upload ZIP & Ekstrak</h2>
-        <p class="card-subtitle">Pilih repository tujuan, lalu pilih file .zip yang akan diupload beserta strukturnya.</p>
+        <p class="card-subtitle">Pilih repository tujuan, lalu pilih file .zip yang akan diupload lewat up2git.</p>
 
         <!-- Target Repository Select -->
         <div class="form-group">
@@ -171,7 +177,7 @@
         <!-- Custom Commit Message -->
         <div class="form-group">
           <label class="form-label" for="upload-commit-msg">2. Pesan Commit (Commit Message)</label>
-          <input type="text" id="upload-commit-msg" class="form-input" value="Upload via Web ZIP Uploader" placeholder="Contoh: Initial commit atau Update fitur">
+          <input type="text" id="upload-commit-msg" class="form-input" value="Upload via up2git" placeholder="Contoh: Initial commit atau Update fitur">
         </div>
 
         <!-- Dropzone Area -->
@@ -192,7 +198,7 @@
         <!-- Extracted File Tree Preview -->
         <div id="file-preview-card" class="file-preview-card">
           <div class="file-preview-header">
-            <span style="font-weight: 600; font-size: 0.9rem;">Pratinjau Isi ZIP:</span>
+            <span style="font-weight: 700; font-size: 0.92rem;">Pratinjau Isi ZIP:</span>
             <div>
               <span id="preview-file-count" class="badge badge-public">0 File</span>
               <span id="preview-total-size" class="badge badge-private" style="margin-left: 6px;">0 KB</span>
@@ -231,7 +237,7 @@
     <section id="view-new-repo" class="view">
       <div class="glass-card">
         <h2 class="card-title">Buat Repository Baru</h2>
-        <p class="card-subtitle">Buat repository langsung di akun GitHub Anda dari browser HP.</p>
+        <p class="card-subtitle">Buat repository langsung di akun GitHub Anda lewat up2git.</p>
 
         <form id="form-new-repo">
           <div class="form-group">
@@ -268,8 +274,8 @@
          ====================================================================== -->
     <section id="view-tutorial" class="view">
       <div class="glass-card" style="padding: 24px;">
-        <h2 class="card-title">Panduan & Tutorial</h2>
-        <p class="card-subtitle">Langkah mudah menggunakan GitHub ZIP Uploader lewat HP.</p>
+        <h2 class="card-title">Panduan & Tutorial up2git</h2>
+        <p class="card-subtitle">Langkah mudah menggunakan up2git untuk upload file ZIP ke GitHub lewat HP.</p>
 
         <div class="tutorial-step">
           <div class="tutorial-step-header">
@@ -277,14 +283,14 @@
             <div class="step-title">Cara Membuat GitHub Personal Access Token (PAT)</div>
           </div>
           <div class="tutorial-step-content">
-            <p>Untuk menghubungkan web ini dengan akun GitHub Anda, Anda membutuhkan token khusus:</p>
+            <p>Untuk menghubungkan up2git dengan akun GitHub Anda, Anda membutuhkan token khusus:</p>
             <ul>
               <li>Buka browser HP Anda lalu login ke <strong>github.com</strong>.</li>
               <li>Klik foto profil Anda di pojok kanan atas, lalu pilih <strong>Settings</strong>.</li>
               <li>Scroll ke paling bawah di menu sebelah kiri, klik <strong>Developer settings</strong>.</li>
               <li>Pilih menu <strong>Personal access tokens</strong> &gt; <strong>Tokens (classic)</strong>.</li>
               <li>Klik tombol <strong>Generate new token (classic)</strong>.</li>
-              <li>Beri nama pada note (misal: <em>ZIP Uploader HP</em>).</li>
+              <li>Beri nama pada note (misal: <em>up2git HP</em>).</li>
               <li>Pada bagian <strong>Select scopes</strong>, centang kotak <span class="code-pill">repo</span> (Full control of private repositories) dan <span class="code-pill">read:user</span>.</li>
               <li>Scroll ke bawah lalu klik tombol <strong>Generate token</strong>.</li>
               <li><strong>PENTING:</strong> Salin (copy) kode token yang muncul dan simpan. Kode ini hanya ditampilkan satu kali!</li>
@@ -295,7 +301,7 @@
         <div class="tutorial-step">
           <div class="tutorial-step-header">
             <div class="step-number">2</div>
-            <div class="step-title">Cara Connect ke Web App Ini</div>
+            <div class="step-title">Cara Connect ke up2git</div>
           </div>
           <div class="tutorial-step-content">
             <p>Buka menu <strong>Home</strong> di aplikasi ini, paste kode token yang sudah Anda salin ke dalam kolom input token, lalu klik tombol <strong>Connect to GitHub</strong>. Jika berhasil, foto profil dan statistik GitHub Anda akan langsung muncul.</p>
@@ -312,7 +318,7 @@
             <ul>
               <li>Buka menu <strong>Repositories</strong> di bawah layar, cari repo yang Anda inginkan, lalu klik tombol <strong>Upload ke sini</strong>.</li>
               <li>Atau langsung buka menu <strong>Upload</strong> dan pilih nama repository dari menu dropdown di atas.</li>
-              <li>Jika belum punya repo, buka menu <strong>New Repo</strong> untuk membuat repository baru dalam hitungan detik.</li>
+              <li>Jika belum punya repo, buka menu <strong>New Repo</strong> untuk membuat repository baru secara praktis.</li>
             </ul>
           </div>
         </div>
@@ -326,7 +332,7 @@
             <p>Kompres folder project Anda di HP menjadi format <strong>.zip</strong>:</p>
             <ul>
               <li>Di menu <strong>Upload</strong>, klik kotak area Drag & Drop lalu pilih file .zip Anda.</li>
-              <li>Aplikasi akan mengekstrak seluruh file beserta nested foldernya secara otomatis langsung di browser HP.</li>
+              <li>up2git akan mengekstrak seluruh file beserta nested foldernya secara otomatis langsung di browser HP.</li>
               <li>Pratinjau seluruh file dan ukurannya akan ditampilkan di layar.</li>
               <li>Klik <strong>Upload Seluruh Isi ke GitHub</strong>, lalu konfirmasi.</li>
               <li>Tunggu progress bar sampai 100%. File Anda sudah online di GitHub!</li>
@@ -340,7 +346,7 @@
   </main>
 
   <!-- ======================================================================
-       BOTTOM FLOATING PILL NAVIGATION (Dynamic Island Inspired)
+       BOTTOM FLOATING PILL NAVIGATION
        ====================================================================== -->
   <nav class="bottom-nav-container">
     <div class="bottom-nav-pill">
@@ -396,7 +402,7 @@
   <!-- Global Loading Overlay -->
   <div id="loading-overlay" class="loading-overlay">
     <div class="spinner"></div>
-    <span id="loading-text" style="font-weight: 600; font-size: 1rem; color: #fff;">Memproses...</span>
+    <span id="loading-text" style="font-weight: 700; font-size: 1rem; color: #fff;">Memproses...</span>
   </div>
 
   <!-- Toast Notification Container -->
@@ -408,5 +414,5 @@
   <script src="js/ui.js"></script>
   <script src="js/app.js"></script>
 
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a12e1d12da24fd9a',t:'MTc4MjY2NDYxOQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
