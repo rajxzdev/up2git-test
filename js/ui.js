@@ -6,7 +6,6 @@
 class UIManager {
   constructor() {
     this.activeView = 'home';
-    this.toastTimeout = null;
   }
 
   /**
@@ -35,9 +34,7 @@ class UIManager {
   }
 
   /**
-   * Show Toast Notification
-   * @param {string} message - Notification text
-   * @param {string} type - 'success', 'error', or 'info'
+   * Show Toast Notification (Stable HW accelerated top center position)
    */
   showToast(message, type = 'info') {
     const container = document.getElementById('toast-container');
@@ -48,11 +45,11 @@ class UIManager {
 
     let iconSvg = '';
     if (type === 'success') {
-      iconSvg = `<svg class="toast-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`;
+      iconSvg = `<svg class="toast-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`;
     } else if (type === 'error') {
-      iconSvg = `<svg class="toast-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>`;
+      iconSvg = `<svg class="toast-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>`;
     } else {
-      iconSvg = `<svg class="toast-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>`;
+      iconSvg = `<svg class="toast-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>`;
     }
 
     toast.innerHTML = `
@@ -64,10 +61,10 @@ class UIManager {
 
     setTimeout(() => {
       toast.style.opacity = '0';
-      toast.style.transform = 'translateY(-10px) scale(0.95)';
+      toast.style.transform = 'translate3d(0, -12px, 0) scale(0.96)';
       toast.style.transition = 'all 0.3s ease';
       setTimeout(() => toast.remove(), 300);
-    }, 4000);
+    }, 3800);
   }
 
   /**
@@ -145,7 +142,7 @@ class UIManager {
   }
 
   /**
-   * Render Repositories Grid
+   * Render Repositories Grid (Anti-offside flex boxes)
    */
   renderRepositories(repos, searchQuery = '') {
     const grid = document.getElementById('repos-grid');
@@ -176,7 +173,7 @@ class UIManager {
       const desc = repo.description || "Tidak ada deskripsi repository.";
 
       card.innerHTML = `
-        <div>
+        <div style="min-width: 0;">
           <div class="repo-top">
             <h3 class="repo-name">${repo.name}</h3>
             <span class="badge ${badgeClass}">${badgeText}</span>
@@ -197,7 +194,6 @@ class UIManager {
       grid.appendChild(card);
     });
 
-    // Attach click listeners for "Upload ke sini" buttons
     document.querySelectorAll('.btn-select-upload').forEach(btn => {
       btn.addEventListener('click', (e) => {
         const repoName = e.currentTarget.dataset.repo;
@@ -257,7 +253,6 @@ class UIManager {
       const item = document.createElement('div');
       item.className = 'file-item';
 
-      const ext = f.path.split('.').pop().toLowerCase();
       let icon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>`;
 
       item.innerHTML = `
@@ -265,7 +260,7 @@ class UIManager {
           ${icon}
           <span class="file-path" title="${f.path}">${f.path}</span>
         </div>
-        <span class="file-size">${window.zipHandler.formatBytes(f.size, 1)}</span>
+        <span class="file-size">${window.zipHandler.formatBytes(f.size)}</span>
       `;
 
       fileListEl.appendChild(item);
@@ -309,7 +304,7 @@ class UIManager {
   }
 
   /**
-   * Add log entry to upload console
+   * Add log entry to upload console (Using clean SVG icons)
    */
   addUploadLog(text, type = 'info') {
     const logEl = document.getElementById('upload-log');
@@ -317,7 +312,17 @@ class UIManager {
 
     const div = document.createElement('div');
     div.className = `log-item log-${type}`;
-    div.textContent = `[${new Date().toLocaleTimeString()}] ${text}`;
+
+    let icon = '';
+    if (type === 'success') {
+      icon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+    } else if (type === 'error') {
+      icon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+    } else {
+      icon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>`;
+    }
+
+    div.innerHTML = `${icon}<span style="min-width: 0; flex: 1;">[${new Date().toLocaleTimeString()}] ${text}</span>`;
 
     logEl.appendChild(div);
     logEl.scrollTop = logEl.scrollHeight;
