@@ -344,10 +344,10 @@ document.addEventListener('DOMContentLoaded', () => {
     
     if (failCount === 0) {
       ui.showToast(`Luar biasa! Seluruh ${successCount} file berhasil diupload ke GitHub.`, 'success');
-      ui.addUploadLog("🎉 SELURUH PROSES UPLOAD BERHASIL SEMPURNA!", 'success');
+      ui.addUploadLog("SELURUH PROSES UPLOAD BERHASIL SEMPURNA!", 'success');
     } else {
       ui.showToast(`Proses selesai dengan ${failCount} kegagalan. Periksa log upload.`, 'error');
-      ui.addUploadLog(`⚠️ PROSES SELESAI: ${successCount} berhasil, ${failCount} gagal.`, 'error');
+      ui.addUploadLog(`PROSES SELESAI: ${successCount} berhasil, ${failCount} gagal.`, 'error');
     }
   }
 
