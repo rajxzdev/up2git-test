@@ -1,6 +1,6 @@
 /**
  * Main Application Controller
- * Coordinates events between Auth, Repositories, ZIP Extraction, UI rendering, and Theme Switcher.
+ * Coordinates events between Auth, Repositories, ZIP Extraction, UI rendering, Theme Switcher, and Upload History.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -342,6 +342,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     ui.updateProgress(100, `Selesai! (${successCount} sukses, ${failCount} gagal)`);
     
+    // Record to history chart
+    if (successCount > 0) {
+      const history = JSON.parse(localStorage.getItem('up2git_upload_history') || '[]');
+      const nowStr = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+      history.push({
+        date: nowStr,
+        repo: repo,
+        count: successCount
+      });
+      localStorage.setItem('up2git_upload_history', JSON.stringify(history));
+      ui.renderHistoryChart();
+    }
+
     if (failCount === 0) {
       ui.showToast(`Luar biasa! Seluruh ${successCount} file berhasil diupload ke GitHub.`, 'success');
       ui.addUploadLog("SELURUH PROSES UPLOAD BERHASIL SEMPURNA!", 'success');
