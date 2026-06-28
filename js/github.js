@@ -123,7 +123,6 @@ class GitHubAPI {
    */
   async getFileSha(owner, repo, path) {
     try {
-      // Encode path parts properly
       const encodedPath = path.split('/').map(encodeURIComponent).join('/');
       const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${encodedPath}`, {
         method: 'GET',
@@ -149,7 +148,7 @@ class GitHubAPI {
     const url = `https://api.github.com/repos/${owner}/${repo}/contents/${encodedPath}`;
 
     const payload = {
-      message: commitMessage || "Upload via Web ZIP Uploader",
+      message: commitMessage || "Upload via up2git",
       content: base64Content
     };
 
@@ -165,7 +164,6 @@ class GitHubAPI {
 
     const data = await response.json();
     if (!response.ok) {
-      // If 422 (Unprocessable Entity / conflict), maybe SHA was missing or mismatched
       throw new Error(data.message || `HTTP ${response.status}`);
     }
 
@@ -173,5 +171,4 @@ class GitHubAPI {
   }
 }
 
-// Export singleton instance
 window.githubAPI = new GitHubAPI();
