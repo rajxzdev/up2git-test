@@ -1,6 +1,8 @@
-# 📦 GitHub ZIP File Uploader (iOS 26 Glassmorphism Edition)
+# 🚀 up2git - GitHub ZIP File Uploader
 
-Web App progresif (Pure Frontend / Vanilla JS tanpa framework) yang dirancang khusus untuk mempermudah developer mengupload file ZIP lewat HP/mobile, mengekstrak isi ZIP langsung di dalam browser secara otomatis, dan mengupload seluruh struktur folder beserta file di dalamnya ke GitHub Repository menggunakan Personal Access Token (PAT).
+Web App progresif (*Pure Frontend / Vanilla JS tanpa framework*) yang dirancang khusus untuk mempermudah developer mengupload file ZIP lewat HP/mobile, mengekstrak isi ZIP langsung di dalam browser secara otomatis, dan mengupload seluruh struktur folder beserta file di dalamnya ke GitHub Repository menggunakan Personal Access Token (PAT).
+
+Dilengkapi dengan sistem desain **iOS 26 Clean Monochrome Glassmorphism** beropsi **Light & Dark Mode** interaktif.
 
 ---
 
@@ -23,10 +25,10 @@ Web App progresif (Pure Frontend / Vanilla JS tanpa framework) yang dirancang kh
    - Mendukung penimpaan file lama (*overwrite support via file SHA check*).
    - Progress bar interaktif & konsol log real-time.
 
-4. **🍎 Desain UI/UX Kelas Atas (iOS 26 Inspired):**
-   - **Glassmorphism & Fluid Glass:** Efek blur transparan berpadu dengan animasi *ambient glowing blobs* di latar belakang.
+4. **🍎 Desain UI/UX Kelas Atas (iOS 26 Light/Dark Edition):**
+   - **Monochrome Glassmorphism:** Tampilan bersih (*clean*) berpadu dengan efek kaca buram (*frosted glass*).
+   - **Theme Switcher:** Mendukung deteksi otomatis tema sistem operasi HP Anda serta tombol manual (*toggle Sun/Moon*) yang menyimpan preferensi Anda.
    - **Dynamic Island Bottom Nav:** Bar navigasi mengambang berbentuk kapsul (*pill*) dengan indikator ekspansi teks yang sangat mulus.
-   - **Mobile-First Responsive:** Dioptimalkan secara menyeluruh untuk kenyamanan sentuhan layar smartphone.
 
 ---
 
@@ -35,23 +37,23 @@ Web App progresif (Pure Frontend / Vanilla JS tanpa framework) yang dirancang kh
 Project ini dibuat sangat rapi dan modular di bawah batas 10–15 file:
 
 ```text
-├── index.html       # Struktur utama aplikasi & semua tampilan (Home, Repos, Upload, New Repo, Tutorial)
+├── index.html       # Struktur utama aplikasi up2git & 5 Views (Home, Repos, Upload, New Repo, Tutorial)
 ├── css/
-│   └── style.css    # Sistem desain iOS 26 Glassmorphism, animasi fluid blob & responsive mobile
+│   └── style.css    # Sistem desain iOS 26 Light/Dark Glassmorphism & responsive mobile
 ├── js/
 │   ├── github.js    # Wrapper REST API GitHub (Auth, Repos, Create Repo, SHA Check, Upload Content)
 │   ├── zip.js       # Handler JSZip (Inspeksi, ekstraksi folder, konversi Base64)
 │   ├── ui.js        # UI Manager (View transitions, Toasts, iOS Modals, Progress bar, dynamic DOM)
-│   └── app.js       # Controller utama koordinator event & logika batch upload
+│   └── app.js       # Controller utama koordinator event, theme switcher & logika batch upload
 ├── vercel.json      # Konfigurasi optimasi static deploy Vercel
-└── README.md        # Dokumentasi project
+└── README.md        # Dokumentasi project up2git
 ```
 
 ---
 
 ## 🚀 Cara Deploy ke GitHub Pages
 
-1. Buat repository baru di GitHub (misalnya `github-zip-uploader`).
+1. Buat repository baru di GitHub (misalnya `up2git`).
 2. Upload seluruh file project ini ke dalam repository tersebut.
 3. Buka tab **Settings** di repository Anda.
 4. Di menu sebelah kiri, klik **Pages**.
@@ -82,10 +84,3 @@ Karena aplikasi ini adalah *Pure Static Frontend*, deploy ke Vercel sangat cepat
    - `repo` (Full control of private repositories)
    - `read:user` (Read all user profile data)
 4. Klik **Generate token**, lalu **Salin & Simpan token tersebut**.
-
----
-
-## 🛡️ Jaminan Keamanan
-
-- **Zero Storage Server:** Aplikasi tidak memiliki database atau backend server.
-- **SessionStorage Only:** Sesuai standar keamanan modern, token disimpan di `sessionStorage` sehingga otomatis musnah sesaat setelah browser ditutup atau tombol Logout ditekan.
