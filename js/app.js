@@ -262,7 +262,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* ==========================================================================
-     Start Upload Event & Batch Logic
+     Start Upload Event & Batch Logic (Synchronized timestamps & Root path upload)
      ========================================================================== */
   document.getElementById('btn-start-upload')?.addEventListener('click', () => {
     const targetRepo = document.getElementById('upload-target-repo')?.value;
@@ -292,7 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <p><strong>Repository:</strong> ${targetRepo}</p>
         <p><strong>Total File:</strong> ${totalFiles} file (${totalSizeStr})</p>
         <p><strong>Pesan Commit:</strong> "${commitMsg}"</p>
-        <p style="margin-top: 10px; font-size: 0.82rem; color: var(--accent-orange); font-weight: 600;">Struktur folder di dalam ZIP akan tetap terjaga secara akurat.</p>
+        <p style="margin-top: 10px; font-size: 0.82rem; color: var(--accent-orange); font-weight: 600;">Root pembungkus ZIP otomatis dilepas (langsung ke root repo).</p>
       </div>
     `;
 
@@ -311,9 +311,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let successCount = 0;
     let failCount = 0;
 
+    // Synchronized batch timestamp
+    const batchTime = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
     document.getElementById('upload-log').innerHTML = '';
     ui.updateProgress(0, "Mulai mengupload...");
-    ui.addUploadLog(`Memulai upload ${total} file ke ${owner}/${repo}...`, 'info');
+    ui.addUploadLog(`Memulai upload ${total} file ke ${owner}/${repo}...`, 'info', batchTime);
 
     const btnUpload = document.getElementById('btn-start-upload');
     if (btnUpload) btnUpload.disabled = true;
@@ -331,10 +334,10 @@ document.addEventListener('DOMContentLoaded', () => {
         await gh.uploadFile(owner, repo, item.path, base64Content, commitMessage, existingSha);
 
         successCount++;
-        ui.addUploadLog(`SUKSES: ${item.path}`, 'success');
+        ui.addUploadLog(`SUKSES: ${item.path}`, 'success', batchTime);
       } catch (err) {
         failCount++;
-        ui.addUploadLog(`GAGAL: ${item.path} - ${err.message}`, 'error');
+        ui.addUploadLog(`GAGAL: ${item.path} - ${err.message}`, 'error', batchTime);
       }
     }
 
@@ -342,7 +345,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     ui.updateProgress(100, `Selesai! (${successCount} sukses, ${failCount} gagal)`);
     
-    // Record to history chart
     if (successCount > 0) {
       const history = JSON.parse(localStorage.getItem('up2git_upload_history') || '[]');
       const nowStr = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
@@ -357,10 +359,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (failCount === 0) {
       ui.showToast(`Luar biasa! Seluruh ${successCount} file berhasil diupload ke GitHub.`, 'success');
-      ui.addUploadLog("SELURUH PROSES UPLOAD BERHASIL SEMPURNA!", 'success');
+      ui.addUploadLog("SELURUH PROSES UPLOAD BERHASIL SEMPURNA!", 'success', batchTime);
     } else {
       ui.showToast(`Proses selesai dengan ${failCount} kegagalan. Periksa log upload.`, 'error');
-      ui.addUploadLog(`PROSES SELESAI: ${successCount} berhasil, ${failCount} gagal.`, 'error');
+      ui.addUploadLog(`PROSES SELESAI: ${successCount} berhasil, ${failCount} gagal.`, 'error', batchTime);
     }
   }
 
